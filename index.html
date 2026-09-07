@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KERA | محاكي حقن الفيلر التجميلي وخريطة الأمان التشريحية</title>
+    <meta name="description" content="منصة تفاعلية سريرية لطلاب التجميل لمحاكاة حقن الفيلر، تشريح الأوعية الدموية ومناطق الخطر لتفادي المضاعفات والنخر الجلدي. برعاية قناة KERA.">
+    
+    <!-- الأنماط والتنسيقات النظيفة الخفيفة السريعة -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/simulator.css">
+</head>
+<body>
+
+    <!-- 1. الترويسة الرئيسية مع اسم القناة KERA -->
+    <header class="site-header">
+        <div class="header-container">
+            <div class="brand-wrapper">
+                <div class="brand-logo">K</div>
+                <div class="brand-text">
+                    <h1>KERA <span class="brand-badge">محاكي التجميل السريري</span></h1>
+                    <p>خريطة الأمان التشريحية ومحاكي تقنيات حقن الفيلر المتقدمة</p>
+                </div>
+            </div>
+
+            <div class="header-actions">
+                <button type="button" class="btn-icon-action" id="toggleSoundBtn" aria-label="كتم أو تشغيل الصوت" title="التحكم بالصوت">
+                    <span>🔊 صوت نشط</span>
+                </button>
+                <button type="button" class="btn-secondary" id="openGlossaryBtn" aria-label="قاموس المصطلحات">
+                    <span>📖</span>
+                    <span>قاموس التجميل</span>
+                </button>
+                <button type="button" class="btn-secondary btn-emergency-highlight" id="openEmergencyBtn" aria-label="عرض بروتوكول الطوارئ">
+                    <span>🚨</span>
+                    <span>إسعاف الانسداد</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- 2. شريط التنقل بين الطبقات التشريحية -->
+    <nav class="layer-nav-bar" aria-label="طبقات التشريح">
+        <div class="layer-nav-container">
+            <span class="layer-title-hint">الطبقة التشريحية المعروضة:</span>
+            <div class="layer-buttons-group">
+                <button type="button" class="layer-btn active" data-layer="safety">
+                    <span>🩸</span>
+                    <span>خريطة الشرايين ومناطق الخطر</span>
+                </button>
+                <button type="button" class="layer-btn" data-layer="aesthetic">
+                    <span>✨</span>
+                    <span>المظهر الطبيعي والملامح</span>
+                </button>
+                <button type="button" class="layer-btn" data-layer="muscles">
+                    <span>💪</span>
+                    <span>التشريح العضلي للوجه</span>
+                </button>
+                <button type="button" class="layer-btn" data-layer="xray">
+                    <span>🔍</span>
+                    <span>العرض الشفاف المدمج (X-Ray)</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 3. المحتوى الرئيسي للمحاكي -->
+    <main class="main-wrapper">
+
+        <!-- أزرار التبديل السريع على شاشات الهواتف المحمولة -->
+        <div class="mobile-tabs" role="tablist">
+            <button type="button" class="mobile-tab-btn active" id="mobileTabFace" role="tab">خريطة الوجه والنتائج البصرية</button>
+            <button type="button" class="mobile-tab-btn" id="mobileTabControls" role="tab">معايير الحقن والتقرير السريري</button>
+        </div>
+
+        <div class="simulator-grid">
+
+            <!-- العمود الأول: العارض التفاعلي للوجه الحقيقي (Realistic Face Map) -->
+            <section class="face-column" aria-label="خريطة الوجه التفاعلية">
+                <div class="card face-viewer-card">
+                    <div class="viewer-header">
+                        <h2><span>📍</span> خريطة الحقن والنتائج البصرية الحية</h2>
+                        <div class="viewer-tools">
+                            <button type="button" class="btn-subtle-tool" id="toggleGoldenRatioBtn" title="عرض أثلاث الوجه والتناظر">
+                                <span>📐</span>
+                                <span>شبكة النسبة الذهبية</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- حاوية الـ SVG التفاعلي المتطابقة مع الوجه البشري الحقيقي -->
+                    <div class="face-svg-container" id="faceContainer">
+                        <!-- يتم توليد الـ SVG وصورة البورتريه وطبقات المضاعفات برمجياً عبر face-svg.js -->
+                    </div>
+
+                    <!-- أزرار المقارنة والتفاعل -->
+                    <div class="viewer-actions">
+                        <button type="button" class="btn-toggle-compare" id="toggleBeforeAfter">
+                            <span>🔄</span>
+                            <span>مقارنة مع مظهر البداية (قبل)</span>
+                        </button>
+                    </div>
+
+                    <!-- دليل مفاتيح الخريطة -->
+                    <div class="map-legend">
+                        <div class="legend-item">
+                            <span class="legend-dot dot-spot"></span>
+                            <span>نقاط الحقن (MD Codes)</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-dot dot-danger"></span>
+                            <span>شرايين ومناطق حرجة</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-dot dot-muscle"></span>
+                            <span>عضلات تعبيرية</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- العمود الثاني: لوحة الإعدادات والتحقق السريري (Clinical Controls) -->
+            <section class="controls-column mobile-hidden" aria-label="لوحة تحكم الحقن">
+                
+                <div class="card panel-card">
+                    <!-- معلومات المنطقة المحددة والشفرة العالمية -->
+                    <div class="zone-header-box">
+                        <div class="zone-top-row">
+                            <h2 id="zoneTitle">الشفاه وتحديد الحواف</h2>
+                            <span class="md-code-badge" id="zoneMdCode">L1, L2, L3</span>
+                        </div>
+                        <div class="zone-en-name" id="zoneSubtitle">Lips & Vermilion Border</div>
+                        <div class="zone-landmark-box" id="zoneLandmark">
+                            يمر الشريان الشفوي غالباً على عمق 2 إلى 4 مم بين الشفة الرطبة والجافة، تحت العضلة الدويرية الفموية.
+                        </div>
+                        <div class="vessel-tags-wrapper">
+                            <span class="vessels-label">الأوعية المجاورة:</span>
+                            <div id="zoneVessels">
+                                <span class="vessel-tag">الشريان الشفوي العلوي</span>
+                                <span class="vessel-tag">الشريان الشفوي السفلي</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 1. أداة الحقن -->
+                    <div class="control-group">
+                        <label class="control-label">1. أداة الحقن المستخدمة:</label>
+                        <div class="pills-group">
+                            <label class="pill-option">
+                                <input type="radio" name="toolType" value="needle" checked>
+                                <div class="pill-box">
+                                    <span class="pill-title">💉 إبرة حادة (Needle 27-30G)</span>
+                                    <span class="pill-desc">دقة عالية / خطر ثقب الأوعية</span>
+                                </div>
+                            </label>
+                            <label class="pill-option">
+                                <input type="radio" name="toolType" value="cannula">
+                                <div class="pill-box">
+                                    <span class="pill-title">🪄 كانيولا كليلة (Cannula 22-25G)</span>
+                                    <span class="pill-desc">أمان عالي / انزلاق غير راضّ</span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- 2. زاوية الدخول (Angle of Insertion) -->
+                    <div class="control-group">
+                        <label class="control-label">2. زاوية دخول الإبرة / الكانيولا:</label>
+                        <div class="pills-group">
+                            <label class="pill-option">
+                                <input type="radio" name="angleType" value="15-30" checked>
+                                <div class="pill-box">
+                                    <span class="pill-title">15° - 30° مماسية</span>
+                                    <span class="pill-desc">لحواف الشفاه والخطوط السطحية</span>
+                                </div>
+                            </label>
+                            <label class="pill-option">
+                                <input type="radio" name="angleType" value="45">
+                                <div class="pill-box">
+                                    <span class="pill-title">45° مائلة</span>
+                                    <span class="pill-desc">لطيات الابتسامة ومداخل الكانيولا</span>
+                                </div>
+                            </label>
+                            <label class="pill-option">
+                                <input type="radio" name="angleType" value="90">
+                                <div class="pill-box">
+                                    <span class="pill-title">90° عمودية على العظم</span>
+                                    <span class="pill-desc">للوجنة والذقن والصدغ (Periosteal)</span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- 3. عمق الحقن -->
+                    <div class="control-group">
+                        <label class="control-label">3. مستوى عمق الحقن في الأنسجة:</label>
+                        <div class="pills-group">
+                            <label class="pill-option">
+                                <input type="radio" name="depthType" value="subdermal" checked>
+                                <div class="pill-box">
+                                    <span class="pill-title">سطحي / تحت الجلد</span>
+                                    <span class="pill-desc">Superficial Subdermal / Mucosal</span>
+                                </div>
+                            </label>
+                            <label class="pill-option">
+                                <input type="radio" name="depthType" value="deep">
+                                <div class="pill-box">
+                                    <span class="pill-title">عميق على السمحاق العظمي</span>
+                                    <span class="pill-desc">Deep Supra-periosteal (Layer 5)</span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- 4. التقنية السريرية (Injection Technique) -->
+                    <div class="control-group">
+                        <label class="control-label">4. التقنية السريرية المستخدمة:</label>
+                        <div class="pills-group">
+                            <label class="pill-option">
+                                <input type="radio" name="techType" value="retrograde" checked>
+                                <div class="pill-box">
+                                    <span class="pill-title">خطي تراجعي (Linear Retrograde)</span>
+                                    <span class="pill-desc">حقن أثناء سحب الإبرة للخلف</span>
+                                </div>
+                            </label>
+                            <label class="pill-option">
+                                <input type="radio" name="techType" value="bolus">
+                                <div class="pill-box">
+                                    <span class="pill-title">حقن كروي عظمي (Bolus/Depot)</span>
+                                    <span class="pill-desc">كتلة نقطية مركزة فوق العظم</span>
+                                </div>
+                            </label>
+                            <label class="pill-option">
+                                <input type="radio" name="techType" value="fanning">
+                                <div class="pill-box">
+                                    <span class="pill-title">حقن مروحي (Fanning)</span>
+                                    <span class="pill-desc">تغطية متسعة عبر مدخل واحد</span>
+                                </div>
+                            </label>
+                            <label class="pill-option">
+                                <input type="radio" name="techType" value="microdroplet">
+                                <div class="pill-box">
+                                    <span class="pill-title">قطرات دقيقة (Micro-droplet)</span>
+                                    <span class="pill-desc">لميزاب الدموع وتعديل الحواف</span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- 5. اختبار السحب العكسي وسرعة الحقن -->
+                    <div class="control-group">
+                        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
+                            <div>
+                                <label class="control-label">5. السحب العكسي (Aspiration):</label>
+                                <div style="display:flex; flex-direction:column; gap:6px;">
+                                    <label class="pill-option" style="min-width:100%;">
+                                        <input type="radio" name="aspirationType" value="negative_5s" checked>
+                                        <div class="pill-box" style="text-align:right; padding:6px 10px;">
+                                            <span class="pill-title" style="font-size:0.82rem;">✓ سحب 5 ثوانٍ سلبي (آمن)</span>
+                                        </div>
+                                    </label>
+                                    <label class="pill-option" style="min-width:100%;">
+                                        <input type="radio" name="aspirationType" value="not_performed">
+                                        <div class="pill-box" style="text-align:right; padding:6px 10px;">
+                                            <span class="pill-title" style="font-size:0.82rem;">⚡ لم يتم إجراء السحب</span>
+                                        </div>
+                                    </label>
+                                    <label class="pill-option" style="min-width:100%;">
+                                        <input type="radio" name="aspirationType" value="positive">
+                                        <div class="pill-box" style="text-align:right; padding:6px 10px;">
+                                            <span class="pill-title" style="font-size:0.82rem; color:var(--danger-red);">🩸 سحب دم إيجابي (داخل وعاء!)</span>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="control-label">6. سرعة وتدفق الحقن:</label>
+                                <div style="display:flex; flex-direction:column; gap:6px;">
+                                    <label class="pill-option" style="min-width:100%;">
+                                        <input type="radio" name="speedType" value="slow" checked>
+                                        <div class="pill-box" style="text-align:right; padding:6px 10px;">
+                                            <span class="pill-title" style="font-size:0.82rem;">✓ تدفق بطيء (&lt; 0.1 ml/د)</span>
+                                        </div>
+                                    </label>
+                                    <label class="pill-option" style="min-width:100%;">
+                                        <input type="radio" name="speedType" value="fast">
+                                        <div class="pill-box" style="text-align:right; padding:6px 10px;">
+                                            <span class="pill-title" style="font-size:0.82rem; color:var(--danger-red);">⚡ تدفق سريع عالي الضغط</span>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 7. قوام الفيلر ودرجة التماسك (G-Prime) -->
+                    <div class="control-group">
+                        <label class="control-label">7. لزوجة وصلابة الفيلر (G-Prime):</label>
+                        <div class="pills-group">
+                            <label class="pill-option">
+                                <input type="radio" name="gPrimeType" value="soft" checked>
+                                <div class="pill-box">
+                                    <span class="pill-title">ناعم (Low G')</span>
+                                    <span class="pill-desc">للشفاه وميزاب الدموع</span>
+                                </div>
+                            </label>
+                            <label class="pill-option">
+                                <input type="radio" name="gPrimeType" value="medium">
+                                <div class="pill-box">
+                                    <span class="pill-title">متوسط (Mid G')</span>
+                                    <span class="pill-desc">لطيات الابتسامة والخطوط</span>
+                                </div>
+                            </label>
+                            <label class="pill-option">
+                                <input type="radio" name="gPrimeType" value="firm">
+                                <div class="pill-box">
+                                    <span class="pill-title">كثيف داعم (High G')</span>
+                                    <span class="pill-desc">لعظام الخد والذقن والفك</span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- 8. شريط التحكم بالجرعة (Dosage Slider) -->
+                    <div class="control-group">
+                        <div class="slider-container">
+                            <div class="slider-header">
+                                <span class="control-label" style="margin-bottom:0;">8. حجم الجرعة المحقونة (Dosage):</span>
+                                <span class="dosage-badge" id="dosageValue">0.50 ml</span>
+                            </div>
+                            <input type="range" class="range-slider" id="dosageSlider" min="0.1" max="2.0" step="0.05" value="0.5">
+                            <div class="range-limits">
+                                <span>0.1 ml (لمسة خفيفة)</span>
+                                <span>2.0 ml (حد أقصى)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- صندوق النتائج السريرية المفصلة الحية (Clinical Detailed Outcome) -->
+                    <div id="clinicalResultsContainer">
+                        <!-- يُعبأ تلقائياً بواسطة محرك الأمان التخصصي -->
+                    </div>
+
+                    <!-- أزرار الإجراءات -->
+                    <div class="action-buttons-group">
+                        <button type="button" class="btn-primary-action" id="applyInjectBtn">
+                            ✓ اعتماد الحقن في سجل الجلسة
+                        </button>
+                        <button type="button" class="btn-outline-action" id="resetSessionBtn">
+                            إعادة ضبط الجلسة
+                        </button>
+                    </div>
+
+                </div>
+
+                <!-- بطاقة سجل الجلسة السريرية والجرعات الإجمالية -->
+                <div class="card history-table-card">
+                    <div class="history-header">
+                        <div>
+                            <h3>سجل إجراءات الجلسة السريرية</h3>
+                            <span class="text-muted" style="font-size: 0.78rem;">توثيق فوري للجرعات والتقنيات والمناطق</span>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <span class="total-volume-badge">الإجمالي: <span id="totalVolumeValue">0.00 ml</span></span>
+                            <button type="button" class="btn-print-action" id="printReportBtn" title="طباعة أو تصدير التقرير">
+                                <span>🖨️ طباعة التقرير</span>
+                            </button>
+                        </div>
+                    </div>
+                    <table class="history-table">
+                        <thead>
+                            <tr>
+                                <th>المنطقة والمعرف</th>
+                                <th>الجرعة</th>
+                                <th>الأداة</th>
+                                <th>إجراء</th>
+                            </tr>
+                        </thead>
+                        <tbody id="historyTableBody">
+                            <tr>
+                                <td colspan="4" class="empty-table-msg">لم يتم تسجيل أي حقن حتى الآن. اضغط على "اعتماد الحقن" لحفظ الإجراء.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </section>
+
+        </div>
+
+    </main>
+
+    <!-- 4. نافذة بروتوكول الطوارئ المنبثقة (Emergency Modal) -->
+    <div class="modal-overlay" id="emergencyModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">🚨 بروتوكول التعامل مع الانسداد الوعائي (Vascular Occlusion Protocol)</h3>
+                <button type="button" class="close-modal-btn" id="closeEmergencyBtn" aria-label="إغلاق">&times;</button>
+            </div>
+            <p style="margin-bottom: 14px; font-size: 0.9rem; color: var(--text-muted);">
+                في حال حدوث علامات نقص التروية (ابيضاض الجلد Blanching، ألم شديد مفاجئ، أو تأخر زمن الامتلاء الشعيري &gt; 2 ثانية)، يجب تطبيق الخطوات التالية فوراً:
+            </p>
+            <ul class="protocol-steps">
+                <li>
+                    <strong>1. إيقاف الحقن فوراً:</strong> لا تتابع حقن أي قطرة إضافية بمجرد الشك بحدوث مضاعفة وعائية.
+                </li>
+                <li>
+                    <strong>2. الحرارة والتدليك اللطيف:</strong> وضع كمادات دافئة لتوسيع الأوعية وتدليك لطيف للمنطقة لتحفيز تدفق الدم.
+                </li>
+                <li>
+                    <strong>3. حقن الهيالورونيداز بجرعات مكثفة (High-Dose Hyaluronidase):</strong> حقن الإنزيم فوراً في كامل المنطقة المهددة والشرايين المغذية لتفكيك الفيلر خلال الدقائق الأولى.
+                </li>
+                <li>
+                    <strong>4. تعزيز الجريان الدموي:</strong> إعطاء أسبرين فموي (إذا لم توجد موانع) لتقليل تجلط الصفيحات الدموية.
+                </li>
+                <li>
+                    <strong>5. المراقبة الدقيقة:</strong> متابعة المريض كل ساعة وفحص الامتلاء الشعيري ولون الجلد حتى استقرار الحالة تماماً.
+                </li>
+            </ul>
+            <div style="margin-top: 18px; text-align: left;">
+                <button type="button" class="btn-secondary" onclick="document.getElementById('emergencyModal').classList.remove('active')">
+                    إغلاق وفهمت الإجراءات
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. نافذة قاموس المصطلحات التجميلية (Cosmetology Glossary Modal) -->
+    <div class="modal-overlay" id="glossaryModal" role="dialog" aria-modal="true" aria-labelledby="glossaryTitle">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="glossaryTitle">📖 قاموس مصطلحات الفيلر والحقن التجميلي السريري</h3>
+                <button type="button" class="close-modal-btn" id="closeGlossaryBtn" aria-label="إغلاق">&times;</button>
+            </div>
+            <div class="glossary-items-list">
+                <div class="glossary-card">
+                    <h4>MD Codes (شفرات دي مايو العالمية):</h4>
+                    <p>منظومة معيارية وضعها جراح التجميل موريسيو دي مايو لتحديد نقاط الحقن التشريحية بدقة رياضية (مثل Ck1 للوجنة، L1 للشفاه، NL1 لخط الابتسامة) لضمان أعلى نسب الأمان والرفع الطبيعي.</p>
+                </div>
+                <div class="glossary-card">
+                    <h4>G-Prime (G') - معامل المرونة والصلابة:</h4>
+                    <p>يعبر عن قدرة جل الفيلر على مقاومة قوى الانضغاط. الفيلر عالي (High G') مخصص للعظام ونحت الفك والخدود، بينما منخفض (Low G') مخصص للمناطق المتحركة كالحواف والشفاه.</p>
+                </div>
+                <div class="glossary-card">
+                    <h4>Supra-periosteal (فوق السمحاق العظمي):</h4>
+                    <p>مستوى حقن عميق يرتكز مباشرة على العظم (الطبقة 5)، وهو المستوى الأكثر أماناً في مناطق كالخدين والذقن لأن معظم الشرايين الوجهية تقع في الطبقات السطحية والمتوسطة.</p>
+                </div>
+                <div class="glossary-card">
+                    <h4>Blunt Cannula (الكانيولا غير الحادة):</h4>
+                    <p>أداة حقن أنبوبية بطرف كليل وفتحة جانبية، تدفع الشرايين والأعصاب دون اختراقها، مما يقلل الكدمات وخطر دخول الفيلر داخل مجرى الدم بنسبة تفوق 85%.</p>
+                </div>
+                <div class="glossary-card">
+                    <h4>Hyaluronidase (الهيالورونيداز):</h4>
+                    <p>الإنزيم المضاد والمنقذ (Reversal Agent)؛ يفكك سلاسل حمض الهيالورونيك خلال دقائق عند حدوث أي انسداد وعائي أو تكتل غير مرغوب فيه.</p>
+                </div>
+                <div class="glossary-card">
+                    <h4>Tyndall Effect (تأثير تيندال):</h4>
+                    <p>ظاهرة بصرية تظهر كتلوّن رمادي-أزرق تحت الجلد عند حقن فيلر حمض الهيالورونيك بسماكة سطحية زائدة تحت العين بسبب تشتت الضوء الأزرق.</p>
+                </div>
+            </div>
+            <div style="margin-top: 18px; text-align: left;">
+                <button type="button" class="btn-secondary" onclick="document.getElementById('glossaryModal').classList.remove('active')">
+                    إغلاق
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 6. التذييل مع اسم القناة KERA -->
+    <footer class="site-footer">
+        <p>
+            منصة <strong>KERA</strong> التعليمية لمحاكاة الحقن التجميلي وخريطة الأمان &copy; 2026.
+            <br>
+            <span style="font-size: 0.78rem;">مصممة خصيصاً لطلاب التجميل والممارسين السريريين لتعزيز الأمان وتفادي المخاطر الوعائية.</span>
+        </p>
+    </footer>
+
+    <!-- ملفات الجافاسكريبت بالترتيب السليم -->
+    <script src="js/anatomy-data.js"></script>
+    <script src="js/face-svg.js"></script>
+    <script src="js/simulator.js"></script>
+    <script src="js/app.js"></script>
+
+</body>
+</html>

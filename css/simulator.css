@@ -1,0 +1,782 @@
+/* ==========================================================================
+   KERA - Simulator & Canvas Specialized Styles
+   تنسيقات المحاكي، خريطة الوجه، نقاط الحقن، وبطاقات الأمان
+   ========================================================================== */
+
+/* العمود الأيمن: خريطة الوجه التفاعلية */
+.face-column {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.face-viewer-card {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    background-color: var(--bg-card);
+}
+
+.viewer-header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border-color);
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.viewer-header h2 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--text-main);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.viewer-tools {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.face-svg-container {
+    width: 100%;
+    max-width: 440px;
+    height: auto;
+    position: relative;
+    user-select: none;
+    -webkit-user-select: none;
+    margin: 0 auto;
+}
+
+.kera-face-svg {
+    width: 100%;
+    height: auto;
+    display: block;
+    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.04));
+    transition: all 0.3s ease;
+}
+
+/* ==========================================================================
+   عناصر الـ SVG وتأثيرات الطبقات
+   ========================================================================== */
+.anatomy-layer {
+    transition: opacity 0.35s ease;
+}
+
+.hidden-layer {
+    display: none;
+}
+
+.anatomy-label {
+    font-family: var(--font-family);
+    font-size: 11px;
+    font-weight: 700;
+    fill: #943A34;
+}
+
+.anatomy-label-small {
+    font-family: var(--font-family);
+    font-size: 10px;
+    font-weight: 600;
+    fill: #A84842;
+}
+
+/* مسارات الشرايين */
+.artery-path {
+    transition: stroke-width 0.2s ease;
+}
+
+/* نقاط الخطر النابضة بهدوء */
+.danger-pulse {
+    fill: #D63A3A;
+    fill-opacity: 0.25;
+    animation: gentlePulse 2s infinite ease-in-out;
+}
+
+.danger-center {
+    fill: #B82828;
+}
+
+@keyframes gentlePulse {
+    0% {
+        r: 6px;
+        fill-opacity: 0.4;
+    }
+    50% {
+        r: 11px;
+        fill-opacity: 0.1;
+    }
+    100% {
+        r: 6px;
+        fill-opacity: 0.4;
+    }
+}
+
+/* ==========================================================================
+   نقاط الحقن التفاعلية (Injection Hotspots)
+   ========================================================================== */
+.injection-spot {
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    outline: none;
+}
+
+.spot-hit-area {
+    fill: transparent;
+}
+
+.spot-outer-ring {
+    fill: rgba(184, 115, 99, 0.22);
+    stroke: #B87363;
+    stroke-width: 1.5;
+    transition: all 0.25s ease;
+}
+
+.spot-center {
+    fill: #B87363;
+    transition: all 0.25s ease;
+}
+
+.spot-badge-text {
+    font-family: var(--font-family);
+    font-size: 11px;
+    font-weight: 700;
+    fill: #4F403B;
+    text-shadow: 0 1px 3px rgba(255, 255, 255, 0.9);
+    pointer-events: none;
+}
+
+.injection-spot:hover .spot-outer-ring,
+.injection-spot:focus .spot-outer-ring {
+    r: 16px;
+    fill: rgba(184, 115, 99, 0.4);
+    stroke-width: 2.2;
+}
+
+.injection-spot:hover .spot-center,
+.injection-spot:focus .spot-center {
+    r: 7px;
+}
+
+/* تحديد النقطة النشطة */
+.injection-spot.selected-spot .spot-outer-ring {
+    fill: rgba(35, 39, 42, 0.15);
+    stroke: var(--text-main);
+    stroke-width: 2.5;
+    r: 16px;
+}
+
+.injection-spot.selected-spot .spot-center {
+    fill: var(--text-main);
+    r: 7px;
+}
+
+/* النقاط الحرجة (ميزاب الدموع والصدغ) */
+.spot-critical {
+    fill: rgba(197, 48, 48, 0.2);
+    stroke: var(--danger-red);
+}
+
+.spot-critical-center {
+    fill: var(--danger-red);
+}
+
+/* زر المقارنة التفاعلي (قبل / بعد) */
+.viewer-actions {
+    width: 100%;
+    margin-top: 14px;
+    display: flex;
+    justify-content: center;
+}
+
+.btn-toggle-compare {
+    background-color: var(--bg-subtle);
+    border: 1px solid var(--border-color);
+    padding: 9px 18px;
+    border-radius: 30px;
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--text-main);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+}
+
+.btn-toggle-compare:hover {
+    background-color: #E8E1D7;
+}
+
+.btn-toggle-compare.btn-active-toggle {
+    background-color: var(--brand-soft);
+    color: var(--brand-dark);
+    border-color: var(--brand-primary);
+}
+
+/* دليل رموز الخريطة في الأسفل */
+.map-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    justify-content: center;
+    padding-top: 12px;
+    margin-top: 12px;
+    border-top: 1px dashed var(--border-color);
+    width: 100%;
+    font-size: 0.82rem;
+    color: var(--text-muted);
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+.legend-dot.dot-spot {
+    background-color: var(--brand-primary);
+}
+
+.legend-dot.dot-danger {
+    background-color: var(--danger-red);
+}
+
+.legend-dot.dot-muscle {
+    background-color: #E2756E;
+}
+
+/* ==========================================================================
+   العمود الأيسر: لوحة التحكم السريرية (Clinical Control Panel)
+   ========================================================================== */
+.controls-column {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.panel-card {
+    padding: 20px;
+}
+
+/* شفرات MD Codes والعنوان العلوي */
+.zone-top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+}
+
+.md-code-badge {
+    background-color: var(--brand-soft);
+    color: var(--brand-dark);
+    font-size: 0.8rem;
+    font-weight: 800;
+    padding: 3px 8px;
+    border-radius: 6px;
+    border: 1px solid rgba(184, 115, 99, 0.2);
+}
+
+/* ==========================================================================
+   بطاقة النتائج السريرية التفصيلية الحية (Detailed Clinical Outcomes)
+   ========================================================================== */
+.clinical-outcome-card {
+    border-radius: var(--radius-sm);
+    padding: 16px;
+    margin-top: 16px;
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+}
+
+.outcome-success {
+    background-color: var(--safe-bg);
+    border-color: rgba(46, 125, 82, 0.25);
+}
+
+.outcome-danger {
+    background-color: var(--danger-bg);
+    border-color: rgba(197, 48, 48, 0.3);
+}
+
+.outcome-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px dashed rgba(0, 0, 0, 0.08);
+    padding-bottom: 12px;
+    margin-bottom: 12px;
+}
+
+.outcome-title {
+    font-size: 0.98rem;
+    font-weight: 800;
+    color: var(--text-main);
+}
+
+.outcome-zone-sub {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    font-weight: 600;
+    margin-top: 2px;
+}
+
+/* مؤشر الأمان السريري */
+.safety-score-meter {
+    text-align: center;
+    padding: 6px 12px;
+    border-radius: 8px;
+    min-width: 75px;
+}
+
+.safety-score-meter.score-optimal {
+    background-color: #D9F2E2;
+    color: var(--safe-green);
+    border: 1px solid rgba(46, 125, 82, 0.3);
+}
+
+.safety-score-meter.score-caution {
+    background-color: var(--caution-bg);
+    color: var(--caution-yellow);
+    border: 1px solid rgba(184, 134, 11, 0.3);
+}
+
+.safety-score-meter.score-critical {
+    background-color: #FCDCDC;
+    color: var(--danger-red);
+    border: 1px solid rgba(197, 48, 48, 0.3);
+}
+
+.score-number {
+    font-size: 1.25rem;
+    font-weight: 900;
+    line-height: 1;
+}
+
+.score-label {
+    font-size: 0.68rem;
+    font-weight: 700;
+    margin-top: 2px;
+}
+
+/* تفاصيل المضاعفات والخطأ */
+.complication-detail-box,
+.success-detail-box {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.comp-banner {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.92rem;
+    color: var(--danger-red);
+    font-weight: 800;
+    background-color: rgba(197, 48, 48, 0.08);
+    padding: 8px 12px;
+    border-radius: 6px;
+}
+
+.success-banner {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.92rem;
+    color: var(--safe-green);
+    font-weight: 800;
+    background-color: rgba(46, 125, 82, 0.08);
+    padding: 8px 12px;
+    border-radius: 6px;
+}
+
+.comp-section {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.comp-label {
+    font-size: 0.82rem;
+    font-weight: 800;
+    color: var(--text-main);
+}
+
+.comp-text {
+    font-size: 0.85rem;
+    color: var(--text-main);
+    line-height: 1.5;
+    background-color: rgba(255, 255, 255, 0.7);
+    padding: 8px 10px;
+    border-radius: 6px;
+}
+
+.comp-errors-list {
+    list-style: none;
+    font-size: 0.84rem;
+    color: var(--danger-red);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.comp-rescue-box {
+    background-color: #FFFFFF;
+    border: 1px solid rgba(197, 48, 48, 0.3);
+    border-right: 4px solid var(--danger-red);
+    padding: 10px 12px;
+    border-radius: 6px;
+    margin-top: 4px;
+}
+
+.comp-rescue-title {
+    font-size: 0.86rem;
+    font-weight: 800;
+    color: var(--danger-red);
+    margin-bottom: 6px;
+}
+
+.rescue-steps-list {
+    padding-right: 18px;
+    font-size: 0.82rem;
+    color: #4A1515;
+    line-height: 1.5;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.success-checklist,
+.post-care-list {
+    list-style: none;
+    font-size: 0.84rem;
+    color: #1F4D33;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    background-color: rgba(255, 255, 255, 0.7);
+    padding: 8px 12px;
+    border-radius: 6px;
+}
+
+/* عناصر المضاعفات البصرية في الـ SVG */
+.comp-element {
+    transition: opacity 0.35s ease;
+}
+
+.comp-element.active-complication {
+    animation: compGlowPulse 2.5s infinite ease-in-out;
+}
+
+@keyframes compGlowPulse {
+    0% { opacity: 0.85; filter: drop-shadow(0 0 2px rgba(197, 48, 48, 0.4)); }
+    50% { opacity: 1; filter: drop-shadow(0 0 8px rgba(197, 48, 48, 0.7)); }
+    100% { opacity: 0.85; filter: drop-shadow(0 0 2px rgba(197, 48, 48, 0.4)); }
+}
+
+/* مجموعات الخيارات (Radio Pills) */
+.control-group {
+    margin-bottom: 18px;
+}
+
+.control-label {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--text-main);
+    margin-bottom: 8px;
+}
+
+.pills-group {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.pill-option {
+    flex: 1;
+    min-width: 120px;
+}
+
+.pill-option input[type="radio"] {
+    display: none;
+}
+
+.pill-box {
+    display: flex;
+    flex-direction: column;
+    padding: 8px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    background-color: var(--bg-card);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: center;
+}
+
+.pill-box .pill-title {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.pill-box .pill-desc {
+    font-size: 0.74rem;
+    color: var(--text-muted);
+}
+
+.pill-option input[type="radio"]:checked + .pill-box {
+    border-color: var(--brand-primary);
+    background-color: var(--brand-soft);
+}
+
+.pill-option input[type="radio"]:checked + .pill-box .pill-title {
+    color: var(--brand-dark);
+}
+
+/* شريط الجرعة (Dosage Slider) */
+.slider-container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    background-color: var(--bg-subtle);
+    padding: 14px;
+    border-radius: var(--radius-sm);
+}
+
+.slider-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.dosage-badge {
+    background-color: var(--text-main);
+    color: #FFFFFF;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-weight: 800;
+    font-size: 0.92rem;
+}
+
+.range-slider {
+    width: 100%;
+    height: 7px;
+    border-radius: 4px;
+    background: #D9D2C7;
+    outline: none;
+    -webkit-appearance: none;
+    appearance: none;
+    cursor: pointer;
+}
+
+.range-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--brand-primary);
+    cursor: pointer;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+    transition: transform 0.15s ease;
+}
+
+.range-slider::-webkit-slider-thumb:hover {
+    transform: scale(1.15);
+}
+
+.range-limits {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+/* صندوق التنبيه الطبي السريري (Safety Alert Box) */
+.safety-alert-box {
+    padding: 14px;
+    border-radius: var(--radius-sm);
+    margin-top: 14px;
+    border: 1px solid transparent;
+    transition: all 0.25s ease;
+}
+
+.safety-alert-box.alert-safe {
+    background-color: var(--safe-bg);
+    border-color: rgba(46, 125, 82, 0.2);
+    color: #1B4D32;
+}
+
+.safety-alert-box.alert-caution {
+    background-color: var(--caution-bg);
+    border-color: rgba(184, 134, 11, 0.2);
+    color: #5C4300;
+}
+
+.safety-alert-box.alert-danger {
+    background-color: var(--danger-bg);
+    border-color: rgba(197, 48, 48, 0.25);
+    color: #4A1212;
+}
+
+.alert-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+}
+
+.alert-icon {
+    font-size: 1.2rem;
+}
+
+.alert-title {
+    font-size: 0.95rem;
+    font-weight: 800;
+}
+
+.alert-text {
+    font-size: 0.88rem;
+    line-height: 1.5;
+}
+
+.alert-rec {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px dashed rgba(0, 0, 0, 0.08);
+    font-size: 0.84rem;
+}
+
+/* أزرار الإجراء */
+.action-buttons-group {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.btn-primary-action {
+    flex: 2;
+    background-color: var(--text-main);
+    color: #FFFFFF;
+    border: none;
+    padding: 12px;
+    border-radius: var(--radius-sm);
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.btn-primary-action:hover {
+    background-color: #353B40;
+}
+
+.btn-outline-action {
+    flex: 1;
+    background-color: transparent;
+    color: var(--text-muted);
+    border: 1px solid var(--border-color);
+    padding: 12px;
+    border-radius: var(--radius-sm);
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-outline-action:hover {
+    color: var(--danger-red);
+    border-color: rgba(197, 48, 48, 0.3);
+    background-color: var(--danger-bg);
+}
+
+/* جدول ملخص الجلسة السريرية */
+.history-table-card {
+    padding: 20px;
+}
+
+.history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.history-header h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.total-volume-badge {
+    background-color: var(--brand-soft);
+    color: var(--brand-dark);
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.84rem;
+    font-weight: 700;
+}
+
+.history-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.86rem;
+}
+
+.history-table th {
+    background-color: var(--bg-subtle);
+    padding: 8px 10px;
+    text-align: right;
+    font-weight: 700;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.history-table td {
+    padding: 10px;
+    border-bottom: 1px solid var(--border-color);
+    vertical-align: middle;
+}
+
+.badge-dosage {
+    background-color: var(--bg-subtle);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: 700;
+}
+
+.remove-item-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 4px;
+    border-radius: 4px;
+}
+
+.remove-item-btn:hover {
+    color: var(--danger-red);
+}
+
+.empty-table-msg {
+    text-align: center;
+    color: var(--text-muted);
+    padding: 20px;
+    font-size: 0.86rem;
+}
